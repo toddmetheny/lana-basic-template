@@ -1,0 +1,26 @@
+stage: ${opt:stage, self:provider.stage}
+serverless-offline:
+  prefix: basic
+  port: 3000
+customDomain:
+  domainName: "api.${self:custom.stage}.evergreen.run"
+  basePath: 'basic'
+  stage: "${self:custom.stage}"
+  createRoute53Record: true
+  securityPolicy: tls_1_2
+dynamodb:
+  pointInTimeRecoveryEnabled: ${file(./config/env/local.yml):dynamoDbPointInTimeRecoveryEnabled}
+  stages:
+    - local
+  start:
+    port: 8000
+    migrate: true
+    inMemory: true
+logForwarding:
+  destinationARN: !ImportValue log:${self:custom.stage}:ForwardLambdaArn
+cors:
+  origin: ${file(./config/env/${self:custom.stage}.yml):corsOrigin}
+  headers:
+    - Content-Type
+    - Authorization
+  allowCredentials: false

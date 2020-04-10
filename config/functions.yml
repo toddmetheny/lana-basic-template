@@ -1,0 +1,9 @@
+basic:
+  handler: dist/basic.index
+  description: Activate a payment instrument for a given account
+  events:
+    - http:
+        method: post
+        path: /basic
+        cors: ${self:custom.cors}
+        reqValidatorName: RequestValidator

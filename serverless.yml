@@ -1,0 +1,51 @@
+service: basic
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-iam-roles-per-function
+  - serverless-domain-manager
+  - serverless-offline
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
+  - serverless-log-forwarding
+  - serverless-plugin-warmup
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: us-east-2
+  stage: ${opt:stage, 'local'}
+  memorySize: 256
+  logRetentionInDays: 30
+  versionFunctions: false
+  apiGateway:
+    binaryMediaTypes:
+      - 'multipart/form-data'
+  tracing:
+    apiGateway: true
+    lambda: true
+  environment:
+    STAGE: ${self:provider.stage}
+    EVERGREEN_HOSTNAME: ${self:custom.customDomain.domainName}
+    CORS_ORIGIN: ${self:custom.cors.origin}
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'lambda:InvokeFunction'
+      Resource: "*"
+tags:
+  namespace: evergreen
+
+package:
+  excludeDevDependencies: false
+  artifact: ${opt:artifact, ""}
+  exclude:
+    - './**'
+  include:
+    - 'dist/**/*'
+
+functions: ${file(./config/functions.yml)}
+
+resources: ${file(./config/resources.yml)}
+
+custom: ${file(./config/customs.yml)}

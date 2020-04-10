@@ -1,0 +1,101 @@
+Resources:
+  GatewayResponseDefault4XX:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters:
+        gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+        gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+      ResponseType: DEFAULT_4XX
+      RestApiId:
+        Ref: 'ApiGatewayRestApi'
+  ### API GATEWAY ###
+  RequestValidator:  
+    Type: "AWS::ApiGateway::RequestValidator"
+    Properties:
+      Name: 'RequestValidator'
+      RestApiId: 
+        Ref: ApiGatewayRestApi
+      ValidateRequestBody: true
+      ValidateRequestParameters: true
+  BasicBadRequestBody400:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseTemplates:
+        application/json: '{"message":$context.error.messageString}'
+      ResponseType: BAD_REQUEST_BODY
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicDefault4xx:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: DEFAULT_4XX
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicDefault5xx:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: DEFAULT_5XX
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicAccessDenied:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: ACCESS_DENIED
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicBadRequestParameters:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: BAD_REQUEST_PARAMETERS
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicExpiredToken:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: EXPIRED_TOKEN
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicAuthorizerFailure:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: AUTHORIZER_FAILURE
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicIntegrationFailure:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: INTEGRATION_FAILURE
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicIntegrationTimeout:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: INTEGRATION_TIMEOUT
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicQuoteExceeded:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: QUOTA_EXCEEDED
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicRequestTooLarge:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: REQUEST_TOO_LARGE
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicThrottled:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseType: THROTTLED
+      RestApiId: !Ref ApiGatewayRestApi
+  BasicUnauthorized:
+    Type: 'AWS::ApiGateway::GatewayResponse'
+    Properties:
+      ResponseParameters: ${self:custom.apiGatewayErrorResponseParameters}
+      ResponseTemplates:
+        application/json: '{"name": "UnauthorizedError", "status": 401, "message":$context.error.messageString}'
+      ResponseType: UNAUTHORIZED
+      RestApiId: !Ref ApiGatewayRestApi
